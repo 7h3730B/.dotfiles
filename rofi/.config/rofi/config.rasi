@@ -1,0 +1,34 @@
+configuration {
+  display-run: "╰❯ ";
+  display-drun: "drun: ";
+}
+
+* {
+  background-color: #716559;
+
+  border: 0;
+  lines: 12;
+  padding: 0;
+  margin: 0;
+  spacing: 0;
+}
+
+element selected {
+  background-color: #A59490;
+  text-color: #643A15;
+}
+
+prompt {
+  enabled: true;
+  font: "Hack Nerd Font 12";
+  padding: 12 0 12 12; 
+}
+
+entry {
+  padding: 12 12 12 0;
+}
+
+window {
+  width: 40%;
+  transparency: "real";
+}
