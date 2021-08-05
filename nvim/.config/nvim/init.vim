@@ -57,7 +57,8 @@ Plug 'plasticboy/vim-markdown'
 call plug#end()
 
 imap <C-BS> <C-W>
-imap jk <Esc>
+" ANKI: Escape insert mode fast
+imap jj <Esc>
 
 " Set the color scheme
 colorscheme codedark
@@ -71,9 +72,9 @@ set undodir=~/.nvim/.vimundo
 set undolevels=1000
 set undoreload=10000
 
-" vim-commentary
-nnoremap <space>/ :Commentary<CR>
-vnoremap <space>/ :Commentary<CR>
+" ANKI: use vim commentary
+nnoremap <leader>/ :Commentary<CR>
+vnoremap <leader>/ :Commentary<CR>
 
 " rainbow
 let g:rainbow#max_level = 16
@@ -163,7 +164,6 @@ let g:vimwiki_list = [{'path': '~/notes/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 
 
-
 " ---------------------------------------------------------------
 " signify
 
@@ -180,21 +180,33 @@ let g:signify_sign_show_text = 1
 " ---------------------------------------------------------------
 " mappings
 
-  nnoremap <silent> <C-Up>    :resize -2<CR>
-  nnoremap <silent> <C-Down>  :resize +2<CR>
-  nnoremap <silent> <C-Left>  :vertical resize -2<CR>
-  nnoremap <silent> <C-Right> :vertical resize +2<CR>
+" ANKI: resize window up
+nnoremap <silent> <C-Up>    :resize -2<CR>
+" ANKI: resize window down
+nnoremap <silent> <C-Down>  :resize +2<CR>
+" ANKI: resize window left
+nnoremap <silent> <C-Left>  :vertical resize -2<CR>
+" ANKI: resize window right
+nnoremap <silent> <C-Right> :vertical resize +2<CR>
 
-  nnoremap <C-h> <C-w>h
-  nnoremap <C-j> <C-w>j
-  nnoremap <C-k> <C-w>k
-  nnoremap <C-l> <C-w>l
+" ANKI: Move to the window left
+nnoremap <C-h> <C-w>h
+" ANKI: Move to the window up
+nnoremap <C-j> <C-w>j
+" ANKI: Move to the window down
+nnoremap <C-k> <C-w>k
+" ANKI: Move to the window right
+nnoremap <C-l> <C-w>l
 
-  nnoremap <Leader>w :w<CR>
-  map <c-s> :SymbolsOutline<CR>
-  nmap <Leader><Leader> V
-  nmap <C-p> :Files<CR>
+" ANKI: Safe quickly
+nnoremap <Leader>w :w<CR>
+map <c-s> :SymbolsOutline<CR>
+" ANKI: Enter Visual line mode quickly
+nmap <Leader><Leader> V
+" ANKI: Open Files quickly
+nmap <C-p> :Files<CR>
 
+" ANKI: Open Buffers quickly
 nmap <leader>; :Buffers<CR>
 
 " rust
@@ -203,19 +215,21 @@ let g:rustfmt_emit_files = 1
 let g:rustfmt_fail_silently = 0
 let g:rust_clip_command = 'xclip -selection clipboard'
 
-" Open new file adjacent to current file
+" ANKI: Open new file adjacent to current file
 nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
-" Use arrow keys in visual mode for indenting
+"ANKI: Use arrow keys in visual mode for indenting
 vmap <Left> <gv
+"ANKI: Use arrow keys in visual mode for indenting
 vmap <Right> >gv
 "
-" <leader>q shows stats
+" ANKI: show stats quickly
 nnoremap <leader>q g<c-g>
 
-  map <C-n> :NERDTreeToggle<CR>
+" ANKI: Toggle Nerdtree
+map <C-n> :NERDTreeToggle<CR>
 
-  autocmd StdinReadPre * let s:std_in=1
+autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
 
 " Markdown preview
@@ -260,6 +274,6 @@ let g:mkdp_page_title = '「${name}」'
 " these filetypes will have MarkdownPreview... commands
 let g:mkdp_filetypes = ['markdown']
 
-" example
+" ANKI: Toggle Markdown Preview 
 nmap <leader>p <Plug>MarkdownPreviewToggle
 

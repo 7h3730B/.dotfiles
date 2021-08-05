@@ -131,7 +131,7 @@ alias up="python -m http.server"
 
 # Create the alias.
 alias dmenu='dmenu_run -nb "$color0" -nf "$color15" -sb "$color1" -sf "$color15"'
-(cat ~/.cache/wal/sequences &)
+(cat ~/.cache/wal/sequences &) >> /dev/null
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
