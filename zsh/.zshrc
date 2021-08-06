@@ -122,7 +122,7 @@ source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 alias ls="lsd"
 alias lsa="ls -a"
 alias lsla="ls -la"
-alias lt="ls -tree"
+alias lt="ls --tree"
 alias diff="diff --color=auto"
 alias grep="grep --color=auto"
 alias up="python -m http.server"
