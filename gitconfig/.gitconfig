@@ -5,3 +5,5 @@
 [user]
 	email = 56200898+7h3730B@users.noreply.github.com
 	name = Teo 7h3730B
+[core]
+    editor = nvim

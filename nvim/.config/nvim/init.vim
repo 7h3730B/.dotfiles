@@ -1,5 +1,6 @@
 " Some stuff stolen from https://github.com/jmutai/dotfiles/blob/master/.vimrc
 " and https://github.com/nickjj/dotfiles/blob/master/.vimrc
+" and https://github.com/ThePrimeagen/.dotfiles/blob/ca41b9e81a131cc0ac414d26d6703b5c21fd143a/nvim/.config/nvim/init.vim
 
 call plug#begin('~/.vim/plugged')
 
@@ -32,7 +33,6 @@ Plug 'vim-airline/vim-airline-themes'
 
 " Markdown preview
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
-
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
 
 Plug 'glts/vim-radical'
@@ -44,7 +44,11 @@ Plug 'joshdick/onedark.vim'
 
 Plug 'tpope/vim-commentary'
 
+Plug 'mhinz/vim-rfc'
+
 Plug 'junegunn/rainbow_parentheses.vim'
+
+Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 " Git --
 Plug 'mhinz/vim-signify'
@@ -59,7 +63,7 @@ Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
-"
+
 " Languages and file types.
 Plug 'cakebaker/scss-syntax.vim'
 Plug 'chr4/nginx.vim'
@@ -274,7 +278,7 @@ nmap <F6> :set invrelativenumber<CR>
 map <F5> :setlocal spell!<CR>
 
 " ANKI: Source current file
-map <leader>sv :source %<CR>
+map <leader>sv :source ~/.config/nvim/init.vim<CR>
 
 " rust
 let g:rustfmt_autosave = 1
@@ -388,6 +392,47 @@ nmap <M-k> mz:m-2<cr>`z
 vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 " ANKI: Move a line of text using ALT
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+
+" ANKI: jump to definition
+nmap <leader>gd <Plug>(coc-definition)
+" ANKI: jump to references
+nmap <leader>gr <Plug>(coc-references)
+
+" set completeopt=menuone,noselect
+" let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+
+" nnoremap <leader>vd :lua vim.lsp.buf.definition()<CR>
+" nnoremap <leader>vi :lua vim.lsp.buf.implementation()<CR>
+" nnoremap <leader>vsh :lua vim.lsp.buf.signature_help()<CR>
+" nnoremap <leader>vrr :lua vim.lsp.buf.references()<CR>
+" nnoremap <leader>vrn :lua vim.lsp.buf.rename()<CR>
+" nnoremap <leader>vh :lua vim.lsp.buf.hover()<CR>
+" nnoremap <leader>vca :lua vim.lsp.buf.code_action()<CR>
+" nnoremap <leader>vsd :lua vim.lsp.diagnostic.show_line_diagnostics(); vim.lsp.util.show_line_diagnostics()<CR>
+" nnoremap <leader>vn :lua vim.lsp.diagnostic.goto_next()<CR>
+" nnoremap <leader>vll :call LspLocationList()<CR>
+
+" let g:compe = {}
+" let g:compe.enabled = v:true
+" let g:compe.autocomplete = v:true
+" let g:compe.debug = v:false
+" let g:compe.min_length = 1
+" let g:compe.preselect = 'enable'
+" let g:compe.throttle_time = 80
+" let g:compe.source_timeout = 200
+" let g:compe.incomplete_delay = 400
+" let g:compe.max_abbr_width = 100
+" let g:compe.max_kind_width = 100
+" let g:compe.max_menu_width = 100
+" let g:compe.documentation = v:true
+
+" let g:compe.source = {}
+" let g:compe.source.path = v:true
+" let g:compe.source.buffer = v:true
+" let g:compe.source.calc = v:true
+" let g:compe.source.nvim_lsp = v:true
+" let g:compe.source.nvim_lua = v:true
+" let g:compe.source.vsnip = v:true
 
 function! VisualSelection(direction, extra_filter) range
     let l:saved_reg = @"
