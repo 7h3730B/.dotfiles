@@ -1,3 +1,6 @@
+" Some stuff stolen from https://github.com/jmutai/dotfiles/blob/master/.vimrc
+" and https://github.com/nickjj/dotfiles/blob/master/.vimrc
+
 call plug#begin('~/.vim/plugged')
 
 Plug 'sheerun/vim-polyglot'
@@ -45,6 +48,9 @@ Plug 'junegunn/rainbow_parentheses.vim'
 
 " Git --
 Plug 'mhinz/vim-signify'
+"
+" Automatically clear search highlights after you move your cursor.
+Plug 'haya14busa/is.vim'
 
 " Syntactic language support
 Plug 'cespare/vim-toml'
@@ -53,6 +59,29 @@ Plug 'rust-lang/rust.vim'
 Plug 'rhysd/vim-clang-format'
 Plug 'godlygeek/tabular'
 Plug 'plasticboy/vim-markdown'
+"
+" Languages and file types.
+Plug 'cakebaker/scss-syntax.vim'
+Plug 'chr4/nginx.vim'
+Plug 'chrisbra/csv.vim'
+Plug 'ekalinin/dockerfile.vim'
+Plug 'elixir-editors/vim-elixir'
+Plug 'Glench/Vim-Jinja2-Syntax'
+Plug 'godlygeek/tabular' | Plug 'tpope/vim-markdown'
+Plug 'jvirtanen/vim-hcl'
+Plug 'lifepillar/pgsql.vim'
+Plug 'othree/html5.vim'
+Plug 'pangloss/vim-javascript'
+Plug 'PotatoesMaster/i3-vim-syntax'
+Plug 'stephpy/vim-yaml'
+Plug 'tmux-plugins/vim-tmux'
+Plug 'tpope/vim-git'
+Plug 'tpope/vim-liquid'
+Plug 'tpope/vim-rails'
+Plug 'vim-python/python-syntax'
+Plug 'vim-ruby/vim-ruby'
+Plug 'wgwoods/vim-systemd-syntax'
+Plug 'towolf/vim-helm'
 
 call plug#end()
 
@@ -95,6 +124,9 @@ set wildignore+=*.Cache,*/bin/*,*/tmp/*,*/obj/*
 " Ignore Python files
 set wildignore+=*/__pycache__/*,*.pyc
 
+" Ignore .git directory
+set wildignore+=*/.git/*
+
 " Auto indentation
 filetype plugin indent on
 
@@ -125,7 +157,21 @@ set cindent
 set cmdheight=2
 set wildmenu
 set langmenu=en
-set mouse=a
+set ignorecase
+set smartcase
+set hlsearch
+set lazyredraw
+set magic
+set showmatch
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
+
+if has('mouse')
+    set mouse=a
+endif
+
 set encoding=utf-8
 set clipboard=unnamedplus
 set fileencoding=utf-8                  " The encoding written to file
@@ -134,6 +180,9 @@ set splitbelow                          " Horizontal splits will automatically b
 set splitright                          " Vertical splits will automatically be to the right
 set whichwrap+=<,>,[,],h,l
 set conceallevel=0                      " So that I can see `` in markdown files
+set cursorline
+set lbr
+set tw=500
 
 " ---------------------------------------------------------------
 " airline
@@ -199,15 +248,33 @@ nnoremap <C-k> <C-w>k
 nnoremap <C-l> <C-w>l
 
 " ANKI: Safe quickly
-nnoremap <Leader>w :w<CR>
+nnoremap <Leader>w :w!<CR>
+" ANKI: Safe with sudo permission
+command W w !sudo tee % > /dev/null
 map <c-s> :SymbolsOutline<CR>
 " ANKI: Enter Visual line mode quickly
 nmap <Leader><Leader> V
 " ANKI: Open Files quickly
 nmap <C-p> :Files<CR>
+" ANKI: Open Fuzzy finder
+nnoremap <silent> <C-p> :FZF -m<CR>
+" ANKI: Fuzzy lines
+nnoremap <silent> <Leader>l :Lines<CR>
+
+" ANKI: Copy the current buffer's path to your clipboard.
+nmap <leader>cp :let @+ = expand("%")<CR>
 
 " ANKI: Open Buffers quickly
 nmap <leader>; :Buffers<CR>
+
+" ANKI: Toggle relative line numbers
+nmap <F6> :set invrelativenumber<CR>
+"
+" ANKI: Toggle spell check
+map <F5> :setlocal spell!<CR>
+
+" ANKI: Source current file
+map <leader>sv :source %<CR>
 
 " rust
 let g:rustfmt_autosave = 1
@@ -270,10 +337,81 @@ let g:mkdp_preview_options = {
 " ${name} will be replace with the file name
 let g:mkdp_page_title = '「${name}」'
 
-" recognized filetypes
+" recognizvd filetypes
 " these filetypes will have MarkdownPreview... commands
 let g:mkdp_filetypes = ['markdown']
 
 " ANKI: Toggle Markdown Preview 
 nmap <leader>p <Plug>MarkdownPreviewToggle
 
+" ANKI: Visual mode search for current selection
+" Super useful! From an idea by Michael Naumann
+vnoremap <silent> * :call VisualSelection('f', '')<CR>
+" ANKI: Visual mode search for current selection backwards
+vnoremap <silent> # :call VisualSelection('b', '')<CR>
+
+" ANKI: search and replace the selected text
+vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
+
+" ANKI: Open new tab
+map <leader>tn :tabnew<cr>
+" ANKI: tab onlye
+map <leader>to :tabonly<cr>
+" ANKI: close a tab
+map <leader>tc :tabclose<cr>
+" ANKI: move tab
+map <leader>tm :tabmove 
+" ANKI: Move to next tab
+map <leader>t<leader> :tabnext 
+
+" ANKI: Toggle between the last and current tab
+let g:lasttab = 1
+nmap <Leader>tl :exe "tabn ".g:lasttab<CR>
+au TabLeave * let g:lasttab = tabpagenr()
+
+" ANKI: Open a new tab with the current buffer's path
+map <leader>te :tabedit <c-r>=expand("%:p:h")<cr>/
+
+" Return to last edit position when opening files (You want this!)
+autocmd BufReadPost *
+      \ if line("'\"") > 0 && line("'\"") <= line("$") |
+      \   exe "normal! g`\"" |
+      \ endif
+" Remember info about open buffers on close
+set viminfo^=%
+
+" ANKI: Move a line of text using ALT
+nmap <M-j> mz:m+<cr>`z
+" ANKI: Move a line of text using ALT
+nmap <M-k> mz:m-2<cr>`z
+" ANKI: Move a line of text using ALT
+vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
+" ANKI: Move a line of text using ALT
+vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
+
+function! VisualSelection(direction, extra_filter) range
+    let l:saved_reg = @"
+    execute "normal! vgvy"
+
+    let l:pattern = escape(@", '\\/.*$^~[]')
+    let l:pattern = substitute(l:pattern, "\n$", "", "")
+
+    if a:direction == 'b'
+        execute "normal ?" . l:pattern . "^M"
+    elseif a:direction == 'gv'
+        call CmdLine("Ag \"" . l:pattern . "\" " )
+    elseif a:direction == 'replace'
+        call CmdLine("%s" . '/'. l:pattern . '/')
+    elseif a:direction == 'f'
+        execute "normal /" . l:pattern . "^M"
+    endif
+
+    let @/ = l:pattern
+    let @" = l:saved_reg
+endfunction
+
+function! CmdLine(str)
+    exe "menu Foo.Bar :" . a:str
+    emenu Foo.Bar
+    unmenu Foo
+endfunction 

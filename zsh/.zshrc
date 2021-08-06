@@ -126,6 +126,8 @@ alias lt="ls -tree"
 alias diff="diff --color=auto"
 alias grep="grep --color=auto"
 alias up="python -m http.server"
+# Fixes the utf-8 char issues
+alias tmux="tmux -u"
 # Import the colors.
 . "${HOME}/.cache/wal/colors.sh"
 
