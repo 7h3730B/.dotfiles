@@ -50,6 +50,10 @@ Plug 'junegunn/rainbow_parentheses.vim'
 
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
+" Debugger
+Plug 'puremourning/vimspector'
+Plug 'szw/vim-maximizer'
+
 " Git --
 Plug 'mhinz/vim-signify'
 "
@@ -398,6 +402,45 @@ nmap <leader>gd <Plug>(coc-definition)
 " ANKI: jump to references
 nmap <leader>gr <Plug>(coc-references)
 
+" ANKI: Toggle Mximazing a pane
+nnoremap <leader>m :MaximizerToggle!<CR>
+" ANKI: launch vimspector
+nnoremap <leader>dd :call vimspector#Launch()<CR>
+" ANKI: open code vimspector panel
+nnoremap <leader>dc :call GotoWindow(g:vimspector_session_windows.code)<CR>
+" ANKI: open tabpage vimspector panel
+nnoremap <leader>dt :call GotoWindow(g:vimspector_session_windows.tagpage)<CR>
+" ANKI: open variables vimspector panel
+nnoremap <leader>dv :call GotoWindow(g:vimspector_session_windows.variables)<CR>
+" ANKI: open watches vimspector panel
+nnoremap <leader>dw :call GotoWindow(g:vimspector_session_windows.watches)<CR>
+" ANKI: open stack_trace vimspector panel
+nnoremap <leader>ds :call GotoWindow(g:vimspector_session_windows.stack_trace)<CR>
+" ANKI: open output vimspector panel
+nnoremap <leader>do :call GotoWindow(g:vimspector_session_windows.output)<CR>
+" ANKI: close vimspector
+nnoremap <leader>de :call vimspector#Reset()<CR>
+
+nnoremap <leader>dtcb :call vimspector#CleanLineBreakpoint()<CR>
+
+" ANKI: vimspector step into
+nmap <leader>dl <Plug>VimspectorStepInto
+" ANKI: vimspector step over 
+nmap <leader>dj <Plug>VimspectorStepOver
+" ANKI: vimspector step out
+nmap <leader>dk <Plug>VimspectorStepOut
+" ANKI: vimspector restart
+nmap <leader>d_ <Plug>VimspectorRestart
+" ANKI: vimspector continue
+nnoremap <leader>d<space> :call vimspector#Continue()<CR>
+
+" ANKI: vimspector run to cursor
+nmap <leader>drc <Plug>VimspectorRunToCursor
+" ANKI: vimspector toggle breakpoint
+nmap <leader>dbp <Plug>VimspectorToggleBreakpoint
+" ANKI: vimspector toggle conditional breakpoint
+nmap <leader>dcbp <Plug>VimspectorToggleConditionalBreakpoint
+
 " set completeopt=menuone,noselect
 " let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
 
@@ -433,6 +476,12 @@ nmap <leader>gr <Plug>(coc-references)
 " let g:compe.source.nvim_lsp = v:true
 " let g:compe.source.nvim_lua = v:true
 " let g:compe.source.vsnip = v:true
+
+
+function! GotoWindow(id)
+    call win_gotoid(a:id)
+    MaximizerToggle
+endfunction
 
 function! VisualSelection(direction, extra_filter) range
     let l:saved_reg = @"
