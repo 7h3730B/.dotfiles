@@ -4,6 +4,7 @@
 
 call plug#begin('~/.vim/plugged')
 
+Plug 'easymotion/vim-easymotion'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-speeddating'
@@ -12,6 +13,7 @@ Plug 'tpope/vim-speeddating'
 Plug 'jiangmiao/auto-pairs'
 
 Plug 'vimwiki/vimwiki'
+Plug 'mattn/emmet-vim'
 
 Plug 'mbbill/undotree'
 
@@ -262,6 +264,14 @@ inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
 let g:completion_confirm_key = ""
 imap <expr> <cr>  pumvisible() ? complete_info()["selected"] != "-1" ?
                  \ "\<Plug>(completion_confirm_completion)"  : "\<c-e>\<CR>" :  "\<CR>"
+
+let g:user_emmet_mode='n'
+let g:user_emmet_leader_key=','
+let g:user_emmet_install_global = 0
+autocmd FileType html,css EmmetInstall
+
+let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
+let g:EasyMotion_smartcase = 1
 
 " Set the color scheme
 colorscheme codedark
@@ -661,7 +671,7 @@ nnoremap [d <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
 nnoremap ]d <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
 " nnoremap <leader>q <cmd>lua vim.lsp.diagnostic.set_loclist()<CR>
 " ANKI: formatting
-nnoremap <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
+nnoremap <leader>gf <cmd>lua vim.lsp.buf.formatting()<CR>
 " ANKI: Open GFiles
 nnoremap <leader>p <cmd>GFiles<CR>
 
@@ -689,6 +699,33 @@ inoremap <silent><expr> <C-e>     compe#close('<C-e>')
 inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
 " ANKI: Autocomplete scroll down
 inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
+
+" ANKI: Easymotion move to char
+map <leader>f <Plug>(easymotion-bd-f)
+nmap <leader>f <Plug>(easymotion-overwin-f)
+
+" ANKI: search for two characters 
+nmap s <Plug>(easymotion-overwin-f2)
+nmap s <Plug>(easymotion-s)
+
+" ANKI: Move to line
+map <Leader>L <Plug>(easymotion-bd-jk)
+nmap <Leader>L <Plug>(easymotion-overwin-line)
+
+" ANKI: Move to word
+map  <Leader>/ <Plug>(easymotion-bd-w)
+nmap <Leader>/ <Plug>(easymotion-overwin-w)
+
+" ANKI: Move l easy 
+map <Leader>l <Plug>(easymotion-lineforward)
+" ANKI: Move j easy 
+map <Leader>j <Plug>(easymotion-j)
+" ANKI: Move k easy 
+map <Leader>k <Plug>(easymotion-k)
+" ANKI: Move h easy 
+map <Leader>h <Plug>(easymotion-linebackward)
+" ANKI: Repeat easymotion
+map <Leader>. <Plug>(easymotion-repeat)
 
 function! GotoWindow(id)
     call win_gotoid(a:id)
