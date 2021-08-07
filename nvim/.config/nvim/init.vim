@@ -5,11 +5,15 @@
 call plug#begin('~/.vim/plugged')
 
 Plug 'sheerun/vim-polyglot'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-speeddating'
 
 " Automatically close brackets
 Plug 'jiangmiao/auto-pairs'
 
 Plug 'vimwiki/vimwiki'
+
+Plug 'mbbill/undotree'
 
 Plug 'tomasiser/vim-code-dark'
 
@@ -22,6 +26,14 @@ Plug 'simrat39/symbols-outline.nvim'
 Plug 'airblade/vim-rooter'
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --all' }
 Plug 'junegunn/fzf.vim'
+"
+" dependencies
+Plug 'nvim-lua/popup.nvim'
+Plug 'nvim-lua/plenary.nvim'
+" telescope
+Plug 'nvim-telescope/telescope.nvim'
+
+Plug 'kyazdani42/nvim-web-devicons'
 
 " File tree
 Plug 'scrooloose/nerdtree'
@@ -48,7 +60,17 @@ Plug 'mhinz/vim-rfc'
 
 Plug 'junegunn/rainbow_parentheses.vim'
 
-Plug 'neoclide/coc.nvim', {'branch': 'release'}
+" Plug 'neoclide/coc.nvim', {'branch': 'release'}
+
+Plug 'neovim/nvim-lspconfig'
+" Plug 'glepnir/lspsaga.nvim'
+Plug 'hrsh7th/nvim-compe'
+" Plug 'kabouzeid/nvim-lspinstall'
+Plug 'simrat39/rust-tools.nvim'
+" Debugging TODO: Look first if needed
+" Plug 'mfussenegger/nvim-dap'
+
+Plug 'wfxr/minimap.vim'
 
 " Debugger
 Plug 'puremourning/vimspector'
@@ -60,42 +82,64 @@ Plug 'mhinz/vim-signify'
 " Automatically clear search highlights after you move your cursor.
 Plug 'haya14busa/is.vim'
 
-" Syntactic language support
-Plug 'cespare/vim-toml'
-Plug 'stephpy/vim-yaml'
-Plug 'rust-lang/rust.vim'
-Plug 'rhysd/vim-clang-format'
-Plug 'godlygeek/tabular'
-Plug 'plasticboy/vim-markdown'
-
 " Languages and file types.
-Plug 'cakebaker/scss-syntax.vim'
-Plug 'chr4/nginx.vim'
-Plug 'chrisbra/csv.vim'
-Plug 'ekalinin/dockerfile.vim'
-Plug 'elixir-editors/vim-elixir'
-Plug 'Glench/Vim-Jinja2-Syntax'
-Plug 'godlygeek/tabular' | Plug 'tpope/vim-markdown'
-Plug 'jvirtanen/vim-hcl'
-Plug 'lifepillar/pgsql.vim'
-Plug 'othree/html5.vim'
-Plug 'pangloss/vim-javascript'
-Plug 'PotatoesMaster/i3-vim-syntax'
-Plug 'stephpy/vim-yaml'
-Plug 'tmux-plugins/vim-tmux'
-Plug 'tpope/vim-git'
-Plug 'tpope/vim-liquid'
-Plug 'tpope/vim-rails'
-Plug 'vim-python/python-syntax'
-Plug 'vim-ruby/vim-ruby'
-Plug 'wgwoods/vim-systemd-syntax'
-Plug 'towolf/vim-helm'
+" Plug 'cespare/vim-toml'
+" Plug 'stephpy/vim-yaml'
+Plug 'rust-lang/rust.vim'
+" Plug 'rhysd/vim-clang-format'
+" Plug 'godlygeek/tabular'
+" Plug 'plasticboy/vim-markdown'
+" Plug 'cakebaker/scss-syntax.vim'
+" Plug 'chr4/nginx.vim'
+" Plug 'chrisbra/csv.vim'
+" Plug 'ekalinin/dockerfile.vim'
+" Plug 'elixir-editors/vim-elixir'
+" Plug 'Glench/Vim-Jinja2-Syntax'
+" Plug 'jvirtanen/vim-hcl'
+" Plug 'lifepillar/pgsql.vim'
+" Plug 'othree/html5.vim'
+" Plug 'pangloss/vim-javascript'
+" Plug 'PotatoesMaster/i3-vim-syntax'
+" Plug 'stephpy/vim-yaml'
+" Plug 'tmux-plugins/vim-tmux'
+" Plug 'tpope/vim-git'
+" Plug 'tpope/vim-liquid'
+" Plug 'tpope/vim-rails'
+" Plug 'vim-python/python-syntax'
+" Plug 'vim-ruby/vim-ruby'
+" Plug 'wgwoods/vim-systemd-syntax'
+" Plug 'towolf/vim-helm'
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
+Plug 'nvim-treesitter/playground'
 
 call plug#end()
 
-imap <C-BS> <C-W>
-" ANKI: Escape insert mode fast
-imap jj <Esc>
+let g:vimspector_enable_mappings = 'HUMAN'
+
+lua require('rust-tools').setup({})
+
+lua <<EOF
+require'nvim-treesitter.configs'.setup {
+  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
+  highlight = {
+    enable = true,              -- false will disable the whole extension
+    additional_vim_regex_highlighting = false,
+  },
+  indent = {
+      enable = true,
+  },
+}
+EOF
+
+lua << EOF
+local nvim_lsp = require('lspconfig')
+
+local servers = { 'pyright', 'rust_analyzer', 'tsserver', 'clangd', 'cmake', 'dockerls', 'jsonls', 'vimls', 'html' }
+for _, lsp in ipairs(servers) do
+  nvim_lsp[lsp].setup{}
+end
+EOF
 
 " Set the color scheme
 colorscheme codedark
@@ -109,16 +153,16 @@ set undodir=~/.nvim/.vimundo
 set undolevels=1000
 set undoreload=10000
 
-" ANKI: use vim commentary
-nnoremap <leader>/ :Commentary<CR>
-vnoremap <leader>/ :Commentary<CR>
-
 " rainbow
 let g:rainbow#max_level = 16
 let g:rainbow#pairs = [['(', ')'], ['[', ']'], ['{', '}']]
 
 " set leader key
 let g:mapleader = "\<Space>"
+
+" minimap
+let g:minimap_width = 20
+let g:minimap_auto_start = 0
 
 " Ignore JS/TS/Web Stack files
 set wildignore+=*/node_modules/*
@@ -221,6 +265,12 @@ let g:vimwiki_list = [{'path': '~/notes/',
                       \ 'syntax': 'markdown', 'ext': '.md'}]
 
 
+" rust
+let g:rustfmt_autosave = 1
+let g:rustfmt_emit_files = 1
+let g:rustfmt_fail_silently = 0
+let g:rust_clip_command = 'xclip -selection clipboard'
+
 " ---------------------------------------------------------------
 " signify
 
@@ -235,74 +285,6 @@ let g:signify_sign_show_count = 0
 let g:signify_sign_show_text = 1
 
 " ---------------------------------------------------------------
-" mappings
-
-" ANKI: resize window up
-nnoremap <silent> <C-Up>    :resize -2<CR>
-" ANKI: resize window down
-nnoremap <silent> <C-Down>  :resize +2<CR>
-" ANKI: resize window left
-nnoremap <silent> <C-Left>  :vertical resize -2<CR>
-" ANKI: resize window right
-nnoremap <silent> <C-Right> :vertical resize +2<CR>
-
-" ANKI: Move to the window left
-nnoremap <C-h> <C-w>h
-" ANKI: Move to the window up
-nnoremap <C-j> <C-w>j
-" ANKI: Move to the window down
-nnoremap <C-k> <C-w>k
-" ANKI: Move to the window right
-nnoremap <C-l> <C-w>l
-
-" ANKI: Safe quickly
-nnoremap <Leader>w :w!<CR>
-" ANKI: Safe with sudo permission
-command W w !sudo tee % > /dev/null
-map <c-s> :SymbolsOutline<CR>
-" ANKI: Enter Visual line mode quickly
-nmap <Leader><Leader> V
-" ANKI: Open Files quickly
-nmap <C-p> :Files<CR>
-" ANKI: Open Fuzzy finder
-nnoremap <silent> <C-p> :FZF -m<CR>
-" ANKI: Fuzzy lines
-nnoremap <silent> <Leader>l :Lines<CR>
-
-" ANKI: Copy the current buffer's path to your clipboard.
-nmap <leader>cp :let @+ = expand("%")<CR>
-
-" ANKI: Open Buffers quickly
-nmap <leader>; :Buffers<CR>
-
-" ANKI: Toggle relative line numbers
-nmap <F6> :set invrelativenumber<CR>
-"
-" ANKI: Toggle spell check
-map <F5> :setlocal spell!<CR>
-
-" ANKI: Source current file
-map <leader>sv :source ~/.config/nvim/init.vim<CR>
-
-" rust
-let g:rustfmt_autosave = 1
-let g:rustfmt_emit_files = 1
-let g:rustfmt_fail_silently = 0
-let g:rust_clip_command = 'xclip -selection clipboard'
-
-" ANKI: Open new file adjacent to current file
-nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-
-"ANKI: Use arrow keys in visual mode for indenting
-vmap <Left> <gv
-"ANKI: Use arrow keys in visual mode for indenting
-vmap <Right> >gv
-"
-" ANKI: show stats quickly
-nnoremap <leader>q g<c-g>
-
-" ANKI: Toggle Nerdtree
-map <C-n> :NERDTreeToggle<CR>
 
 autocmd StdinReadPre * let s:std_in=1
 autocmd VimEnter * if argc() == 1 && isdirectory(argv()[0]) && !exists("s:std_in") | exe 'NERDTree' argv()[0] | wincmd p | ene | exe 'cd '.argv()[0] | endif
@@ -349,6 +331,82 @@ let g:mkdp_page_title = '「${name}」'
 " these filetypes will have MarkdownPreview... commands
 let g:mkdp_filetypes = ['markdown']
 
+" mappings
+
+imap <C-BS> <C-W>
+" ANKI: Escape insert mode fast
+imap jj <Esc>
+
+" ANKI: use vim commentary
+nnoremap <leader>/ :Commentary<CR>
+vnoremap <leader>/ :Commentary<CR>
+
+" ANKI: resize window up
+nnoremap <silent> <C-Up>    :resize -2<CR>
+" ANKI: resize window down
+nnoremap <silent> <C-Down>  :resize +2<CR>
+" ANKI: resize window left
+nnoremap <silent> <C-Left>  :vertical resize -2<CR>
+" ANKI: resize window right
+nnoremap <silent> <C-Right> :vertical resize +2<CR>
+
+" ANKI: Move to the window left
+nnoremap <C-h> <C-w>h
+" ANKI: Move to the window up
+nnoremap <C-j> <C-w>j
+" ANKI: Move to the window down
+nnoremap <C-k> <C-w>k
+" ANKI: Move to the window right
+nnoremap <C-l> <C-w>l
+
+" ANKI: Safe quickly
+nnoremap <Leader>w :w!<CR>
+" ANKI: Safe with sudo permission
+command W w !sudo tee % > /dev/null
+" ANKI: toggle symbols outline
+map <c-s> :SymbolsOutline<CR>
+" ANKI: Enter Visual line mode quickly
+nmap <Leader><Leader> V
+" ANKI: Open Files quickly
+nnoremap <C-p> <cmd>Telescope find_files<CR>
+" nmap <C-p> :Files<CR>
+" ANKI: Open Fuzzy finder
+" nnoremap <silent> <C-p> :FZF -m<CR>
+" ANKI: Fuzzy lines
+nnoremap <silent> <Leader>l :Lines<CR>
+
+" ANKI: Copy the current buffer's path to your clipboard.
+nmap <leader>cp :let @+ = expand("%")<CR>
+
+" ANKI: Open Buffers quickly
+nmap <leader>; <cmd>Telescope buffers<CR>
+
+" ANKI: Fuzzy find help tags
+nmap <leader>h <cmd>Telescope help_tags<CR>
+
+" ANKI: Toggle relative line numbers
+nmap <F6> :set invrelativenumber<CR>
+"
+" ANKI: Toggle spell check
+map <F5> :setlocal spell!<CR>
+
+" ANKI: Source current file
+map <leader>sv :source ~/.config/nvim/init.vim<CR>
+
+" ANKI: Open new file adjacent to current file
+nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
+
+"ANKI: Use arrow keys in visual mode for indenting
+vmap <Left> <gv
+"ANKI: Use arrow keys in visual mode for indenting
+vmap <Right> >gv
+"
+" ANKI: show stats quickly
+nnoremap <leader>q g<c-g>
+
+" ANKI: Toggle Nerdtree
+map <C-n> :NERDTreeToggle<CR>
+
 " ANKI: Toggle Markdown Preview 
 nmap <leader>p <Plug>MarkdownPreviewToggle
 
@@ -363,7 +421,7 @@ vnoremap <silent> <leader>r :call VisualSelection('replace', '')<CR>
 
 " ANKI: Open new tab
 map <leader>tn :tabnew<cr>
-" ANKI: tab onlye
+" ANKI: tab only
 map <leader>to :tabonly<cr>
 " ANKI: close a tab
 map <leader>tc :tabclose<cr>
@@ -398,9 +456,9 @@ vmap <M-j> :m'>+<cr>`<my`>mzgv`yo`z
 vmap <M-k> :m'<-2<cr>`>my`<mzgv`yo`z
 
 " ANKI: jump to definition
-nmap <leader>gd <Plug>(coc-definition)
+" nmap <leader>gd <Plug>(coc-definition)
 " ANKI: jump to references
-nmap <leader>gr <Plug>(coc-references)
+" nmap <leader>gr <Plug>(coc-references)
 
 " ANKI: Toggle Mximazing a pane
 nnoremap <leader>m :MaximizerToggle!<CR>
@@ -441,42 +499,54 @@ nmap <leader>dbp <Plug>VimspectorToggleBreakpoint
 " ANKI: vimspector toggle conditional breakpoint
 nmap <leader>dcbp <Plug>VimspectorToggleConditionalBreakpoint
 
-" set completeopt=menuone,noselect
-" let g:completion_matching_strategy_list = ['exact', 'substring', 'fuzzy']
+" ANKI: Toggle minimap
+nmap <leader>u <cmd>MinimapToggle<CR>
 
-" nnoremap <leader>vd :lua vim.lsp.buf.definition()<CR>
-" nnoremap <leader>vi :lua vim.lsp.buf.implementation()<CR>
-" nnoremap <leader>vsh :lua vim.lsp.buf.signature_help()<CR>
-" nnoremap <leader>vrr :lua vim.lsp.buf.references()<CR>
-" nnoremap <leader>vrn :lua vim.lsp.buf.rename()<CR>
-" nnoremap <leader>vh :lua vim.lsp.buf.hover()<CR>
-" nnoremap <leader>vca :lua vim.lsp.buf.code_action()<CR>
-" nnoremap <leader>vsd :lua vim.lsp.diagnostic.show_line_diagnostics(); vim.lsp.util.show_line_diagnostics()<CR>
-" nnoremap <leader>vn :lua vim.lsp.diagnostic.goto_next()<CR>
-" nnoremap <leader>vll :call LspLocationList()<CR>
+" ANKI: back in jumplist
+nmap <leader>o <C-o>
+" ANKI: forware in jumplist
+nmap <leader>i <C-i>
 
-" let g:compe = {}
-" let g:compe.enabled = v:true
-" let g:compe.autocomplete = v:true
-" let g:compe.debug = v:false
-" let g:compe.min_length = 1
-" let g:compe.preselect = 'enable'
-" let g:compe.throttle_time = 80
-" let g:compe.source_timeout = 200
-" let g:compe.incomplete_delay = 400
-" let g:compe.max_abbr_width = 100
-" let g:compe.max_kind_width = 100
-" let g:compe.max_menu_width = 100
-" let g:compe.documentation = v:true
+" ANKI: toggle undotree
+nmap <leader>gu :UndotreeToggle<CR>
 
-" let g:compe.source = {}
-" let g:compe.source.path = v:true
-" let g:compe.source.buffer = v:true
-" let g:compe.source.calc = v:true
-" let g:compe.source.nvim_lsp = v:true
-" let g:compe.source.nvim_lua = v:true
-" let g:compe.source.vsnip = v:true
+" See `:help vim.lsp.*` for documentation on any of the below functions
+" ANKI: get declaration
+nnoremap gD <cmd>lua vim.lsp.buf.declaration()<CR>
+" ANKI: get definition
+nnoremap gd <cmd>lua vim.lsp.buf.definition()<CR>
+" ANKI: hover info
+nnoremap K <cmd>lua vim.lsp.buf.hover()<CR>
+" ANKI: get implementation
+nnoremap gi <cmd>lua vim.lsp.buf.implementation()<CR>
+" ANKI: Signature help
+nnoremap <C-k> <cmd>lua vim.lsp.buf.signature_help()<CR>
+" nnoremap <leader>wa <cmd>lua vim.lsp.buf.add_workspace_folder()<CR>
+" nnoremap <leader>wr <cmd>lua vim.lsp.buf.remove_workspace_folder()<CR>
+" nnoremap <leader>wl <cmd>lua print(vim.inspect(vim.lsp.buf.list_workspace_folders()))<CR>
+" ANKI: Type definition
+nnoremap <leader>D <cmd>lua vim.lsp.buf.type_definition()<CR>
+" ANKI:rename
+nnoremap <leader>rn <cmd>lua vim.lsp.buf.rename()<CR>
+" ANKI: code actions
+nnoremap <leader>ca <cmd>lua vim.lsp.buf.code_action()<CR>
+" ANKI: Referneces
+nnoremap gr <cmd>lua vim.lsp.buf.references()<CR>
+" nnoremap <leader>e <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
+" ANKII: go to prev
+nnoremap [d <cmd>lua vim.lsp.diagnostic.goto_prev()<CR>
+" ANKII: go to next
+nnoremap ]d <cmd>lua vim.lsp.diagnostic.goto_next()<CR>
+" nnoremap <leader>q <cmd>lua vim.lsp.diagnostic.set_loclist()<CR>
+" ANKI: formatting
+nnoremap <leader>f <cmd>lua vim.lsp.buf.formatting()<CR>
+" ANKI: Open GFiles
+nnoremap <leader>p <cmd>GFiles<CR>
 
+" ANKI: vertical split
+nnoremap <leader>z/ <cmd>vsp<CR>
+" ANKI: split
+nnoremap <leader>z\ <cmd>sp<CR>
 
 function! GotoWindow(id)
     call win_gotoid(a:id)
