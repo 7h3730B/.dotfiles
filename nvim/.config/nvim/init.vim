@@ -554,7 +554,7 @@ nnoremap <leader>q g<c-g>
 map <C-n> :NERDTreeToggle<CR>
 
 " ANKI: Toggle Markdown Preview 
-nmap <leader>p <Plug>MarkdownPreviewToggle
+nmap <leader>md <Plug>MarkdownPreviewToggle
 
 " ANKI: Visual mode search for current selection
 " Super useful! From an idea by Michael Naumann
