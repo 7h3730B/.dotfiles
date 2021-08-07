@@ -9,6 +9,7 @@ Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-speeddating'
 Plug 'editorconfig/editorconfig-vim'
+" Plug 'dylanaraps/wal'
 
 " Automatically close brackets
 Plug 'jiangmiao/auto-pairs'
@@ -130,6 +131,7 @@ colorscheme codedark
 lua << EOF
 require('github-theme').setup({
     themeStyle = "dimmed",
+    commentStyle = "italic",
 })
 EOF
 

@@ -38,5 +38,6 @@ fi
 numlockx &
 # nitrogen --restore &
 wal -i ~/wallpaper.jpg &
-picom &
+# picom &
+setxkbmap -layout euro2
 exec i3
