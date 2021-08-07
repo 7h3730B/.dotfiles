@@ -8,6 +8,7 @@ Plug 'easymotion/vim-easymotion'
 Plug 'sheerun/vim-polyglot'
 Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-speeddating'
+Plug 'editorconfig/editorconfig-vim'
 
 " Automatically close brackets
 Plug 'jiangmiao/auto-pairs'
@@ -15,9 +16,12 @@ Plug 'jiangmiao/auto-pairs'
 Plug 'vimwiki/vimwiki'
 Plug 'mattn/emmet-vim'
 
+Plug 'dbeniamine/cheat.sh-vim'
+
 Plug 'mbbill/undotree'
 
 Plug 'tomasiser/vim-code-dark'
+Plug 'projekt0n/github-nvim-theme'
 
 Plug 'itchyny/lightline.vim'
 Plug 'machakann/vim-highlightedyank'
@@ -118,6 +122,16 @@ Plug 'nvim-treesitter/playground'
 call plug#end()
 
 let g:vimspector_enable_mappings = 'HUMAN'
+let g:trans_bin = "~/.vim"
+
+" Set the color scheme
+colorscheme codedark
+
+lua << EOF
+require('github-theme').setup({
+    themeStyle = "dimmed",
+})
+EOF
 
 lua << EOF
 require('rust-tools').setup({})
@@ -273,8 +287,6 @@ autocmd FileType html,css EmmetInstall
 let g:EasyMotion_startofline = 0 " keep cursor column when JK motion
 let g:EasyMotion_smartcase = 1
 
-" Set the color scheme
-colorscheme codedark
 
 " Enable relative line numbering
 set rnu
@@ -713,8 +725,8 @@ map <Leader>L <Plug>(easymotion-bd-jk)
 nmap <Leader>L <Plug>(easymotion-overwin-line)
 
 " ANKI: Move to word
-map  <Leader>/ <Plug>(easymotion-bd-w)
-nmap <Leader>/ <Plug>(easymotion-overwin-w)
+map  <Leader><Leader>/ <Plug>(easymotion-bd-w)
+nmap <Leader><Leader>/ <Plug>(easymotion-overwin-w)
 
 " ANKI: Move l easy 
 map <Leader>l <Plug>(easymotion-lineforward)
@@ -726,6 +738,11 @@ map <Leader>k <Plug>(easymotion-k)
 map <Leader>h <Plug>(easymotion-linebackward)
 " ANKI: Repeat easymotion
 map <Leader>. <Plug>(easymotion-repeat)
+
+nnoremap Y y$
+nnoremap n nzzzv
+nnoremap N Nzzzv
+nnoremap J mzJ`z
 
 function! GotoWindow(id)
     call win_gotoid(a:id)

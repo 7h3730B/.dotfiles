@@ -84,12 +84,13 @@ plugins=(
 	copyfile
 	dotenv
 	safe-paste
+    emoji
 	virtualenv
 	zsh-autosuggestions
 	zsh-completions
 	zsh-syntax-highlighting
+    zsh-vi-mode
 )
-# Removed zsh-vi-mode because of issues with terminal in nvim
 
 source $ZSH/oh-my-zsh.sh
 
@@ -127,6 +128,7 @@ alias diff="diff --color=auto"
 alias grep="grep --color=auto"
 alias up="python -m http.server"
 alias nvimc="nvim ~/.config/nvim/init.vim"
+alias cat="bat"
 # Fixes the utf-8 char issues
 alias tmux="tmux -u"
 # Import the colors.

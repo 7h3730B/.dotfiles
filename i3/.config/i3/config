@@ -212,6 +212,9 @@ for_window [class="^.*"] border pixel 1
 bindsym $mod+g gaps inner current plus 5
 bindsym $mod+Shift+g gaps inner current minus 5
 
+bindsym $mod+Print exec --no-startup-id maim | tee ~/screenshots/$(date +%s_%h%d_%H:%M:%S).png | xclip -selection clipboard -target image/png && notify-send "Maim" "Screenshot Taken"
+bindsym $mod+Shift+Print exec --no-startup-id maim -s | tee ~/screenshots/$(date +%s_%h%d_%H:%M:%S).png | xclip -selection clipboard -target image/png && notify-send "Maim" "Screenshot Taken"
+
 gaps outer 3
 gaps inner 10
 

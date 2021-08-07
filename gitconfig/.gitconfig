@@ -1,22 +1,36 @@
 [credential]
 	helper = store
+
 [commit]
 	gpgsign = true
+    template = ~/.gitmessage
+
+[alias]
+    st = status
+    co = checkout
+    lp = log -p
+    p = push
+    c = commit -S -m
+
 [user]
 	email = 56200898+7h3730B@users.noreply.github.com
 	name = Teo 7h3730B
+
 [core]
     editor = nvim
+
 [pager]
     diff = delta
     log = delta
     reflog = delta
     show = delta
+
 [delta]
     plus-style = "syntax #012800"
     minus-style = "syntax #340001"
     syntax-theme = Monokai Extended
     navigate = true
     side-by-side = true
+
 [interactive]
     diffFilter = delta --color-only
