@@ -63,7 +63,7 @@ Plug 'junegunn/rainbow_parentheses.vim'
 " Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
 Plug 'neovim/nvim-lspconfig'
-" Plug 'glepnir/lspsaga.nvim'
+Plug 'glepnir/lspsaga.nvim'
 Plug 'hrsh7th/nvim-compe'
 " Plug 'kabouzeid/nvim-lspinstall'
 Plug 'simrat39/rust-tools.nvim'
@@ -117,29 +117,151 @@ call plug#end()
 
 let g:vimspector_enable_mappings = 'HUMAN'
 
-lua require('rust-tools').setup({})
+lua << EOF
+require('rust-tools').setup({})
+EOF
 
-lua <<EOF
+lua << EOF
+require'nvim-web-devicons'.setup {
+    -- your personnal icons can go here (to override)
+    -- DevIcon will be appended to `name`
+    override = {
+    };
+    default = true;
+}
+EOF
+
+lua << EOF
+local actions = require('telescope.actions')
+require('telescope').setup {
+    defaults = {
+        mappings = {
+            n = {
+                ["q"] = actions.close
+            },
+        },
+    }
+}
+EOF
+
+lua << EOF
 require'nvim-treesitter.configs'.setup {
-  ensure_installed = "maintained", -- one of "all", "maintained" (parsers with maintainers), or a list of languages
-  highlight = {
-    enable = true,              -- false will disable the whole extension
-    additional_vim_regex_highlighting = false,
-  },
-  indent = {
-      enable = true,
-  },
+    ensure_installed = "maintained",
+    highlight = {
+        enable = true,
+        disable = {},
+    },
+    indent = {
+        enable = true,
+        disable = {},
+    },
+    ensure_installed = {
+      "tsx",
+      "toml",
+      "php",
+      "json",
+      "yaml",
+      "html",
+      "css",
+      "scss",
+      "rust"
+    },
+}
+EOF
+
+lua << EOF
+local saga = require 'lspsaga'
+
+saga.init_lsp_saga {
+    error_sign = '',
+    warn_sign = '',
+    hint_sign = '',
+    infor_sign = '',
+    border_style = "round",
 }
 EOF
 
 lua << EOF
 local nvim_lsp = require('lspconfig')
+local protocol = require'vim.lsp.protocol'
 
 local servers = { 'pyright', 'rust_analyzer', 'tsserver', 'clangd', 'cmake', 'dockerls', 'jsonls', 'vimls', 'html' }
 for _, lsp in ipairs(servers) do
   nvim_lsp[lsp].setup{}
 end
+
+protocol.CompletionItemKind = {
+    '', -- Text
+    '', -- Method
+    '', -- Function
+    '', -- Constructor
+    '', -- Field
+    '', -- Variable
+    '', -- Class
+    'ﰮ', -- Interface
+    '', -- Module
+    '', -- Property
+    '', -- Unit
+    '', -- Value
+    '', -- Enum
+    '', -- Keyword
+    '﬌', -- Snippet
+    '', -- Color
+    '', -- File
+    '', -- Reference
+    '', -- Folder
+    '', -- EnumMember
+    '', -- Constant
+    '', -- Struct
+    '', -- Event
+    'ﬦ', -- Operator
+    '', -- TypeParameter
+}
 EOF
+
+lua << EOF
+require'compe'.setup {
+  enabled = true;
+  autocomplete = true;
+  debug = false;
+  min_length = 1;
+  preselect = 'enable';
+  throttle_time = 80;
+  source_timeout = 200;
+  resolve_timeout = 800;
+  incomplete_delay = 400;
+  max_abbr_width = 100;
+  max_kind_width = 100;
+  max_menu_width = 100;
+  documentation = {
+    border = { '', '' ,'', ' ', '', '', '', ' ' }, -- the border option is the same as `|help nvim_open_win|`
+    winhighlight = "NormalFloat:CompeDocumentation,FloatBorder:CompeDocumentationBorder",
+    max_width = 120,
+    min_width = 60,
+    max_height = math.floor(vim.o.lines * 0.3),
+    min_height = 1,
+  };
+
+  source = {
+    path = true;
+    buffer = true;
+    calc = true;
+    nvim_lsp = true;
+    nvim_lua = true;
+    vsnip = true;
+    ultisnips = true;
+    luasnip = true;
+  };
+}
+EOF
+
+set completeopt=menuone,noinsert,noselect
+inoremap <expr> <Tab> pumvisible() ? "\<C-n>" : "\<Tab>"
+inoremap <expr> <S-Tab> pumvisible() ? "\<C-p>" : "\<S-Tab>"
+
+let g:completion_confirm_key = ""
+imap <expr> <cr>  pumvisible() ? complete_info()["selected"] != "-1" ?
+                 \ "\<Plug>(completion_confirm_completion)"  : "\<c-e>\<CR>" :  "\<CR>"
 
 " Set the color scheme
 colorscheme codedark
@@ -515,8 +637,8 @@ nmap <leader>gu :UndotreeToggle<CR>
 nnoremap gD <cmd>lua vim.lsp.buf.declaration()<CR>
 " ANKI: get definition
 nnoremap gd <cmd>lua vim.lsp.buf.definition()<CR>
-" ANKI: hover info
-nnoremap K <cmd>lua vim.lsp.buf.hover()<CR>
+" ANKI: hover info lsp normal
+nnoremap <leader>K <cmd>lua vim.lsp.buf.hover()<CR>
 " ANKI: get implementation
 nnoremap gi <cmd>lua vim.lsp.buf.implementation()<CR>
 " ANKI: Signature help
@@ -530,7 +652,7 @@ nnoremap <leader>D <cmd>lua vim.lsp.buf.type_definition()<CR>
 nnoremap <leader>rn <cmd>lua vim.lsp.buf.rename()<CR>
 " ANKI: code actions
 nnoremap <leader>ca <cmd>lua vim.lsp.buf.code_action()<CR>
-" ANKI: Referneces
+" ANKI: Refernces
 nnoremap gr <cmd>lua vim.lsp.buf.references()<CR>
 " nnoremap <leader>e <cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>
 " ANKII: go to prev
@@ -547,6 +669,26 @@ nnoremap <leader>p <cmd>GFiles<CR>
 nnoremap <leader>z/ <cmd>vsp<CR>
 " ANKI: split
 nnoremap <leader>z\ <cmd>sp<CR>
+
+" ANKI: jump next diagnostic
+nnoremap <C-j> <Cmd>Lspsaga diagnostic_jump_next<CR>
+" ANKI: hover doc lspsaga
+nnoremap K <Cmd>Lspsaga hover_doc<CR>
+" ANKI: signature help
+inoremap <C-k> <Cmd>Lspsaga signature_help<CR>
+" ANKI: lsp_finder
+nnoremap <leader>gh <Cmd>Lspsaga lsp_finder<CR>
+
+" ANKI: Autocomplete
+inoremap <silent><expr> <C-Space> compe#complete()
+" ANKI: Autocomplete Confirm
+inoremap <silent><expr> <CR>      compe#confirm('<CR>')
+" ANKI: Autocomplete close
+inoremap <silent><expr> <C-e>     compe#close('<C-e>')
+" ANKI: Autocomplete scroll up 
+inoremap <silent><expr> <C-f>     compe#scroll({ 'delta': +4 })
+" ANKI: Autocomplete scroll down
+inoremap <silent><expr> <C-d>     compe#scroll({ 'delta': -4 })
 
 function! GotoWindow(id)
     call win_gotoid(a:id)
