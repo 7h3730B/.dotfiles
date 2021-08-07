@@ -1,6 +1,6 @@
 # .dotfiles
 
-these are my dotfiles. They are managed with gnu stow.
+these are my dotfiles. They are managed with [gnu stow](https://www.gnu.org/software/stow/).
 
 ## Installation
 ```bash
