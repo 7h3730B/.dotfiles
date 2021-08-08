@@ -542,11 +542,11 @@ map <leader>sv :source ~/.config/nvim/init.vim<CR>
 " ANKI: Open new file adjacent to current file
 nnoremap <leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
-"ANKI: Use arrow keys in visual mode for indenting
+" ANKI: Use arrow keys in visual mode for indenting
 vmap <Left> <gv
-"ANKI: Use arrow keys in visual mode for indenting
+" ANKI: Use arrow keys in visual mode for indenting
 vmap <Right> >gv
-"
+
 " ANKI: show stats quickly
 nnoremap <leader>q g<c-g>
 

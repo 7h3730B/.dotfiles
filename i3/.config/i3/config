@@ -181,6 +181,9 @@ mode "resize" {
 
 bindsym $mod+r mode "resize"
 
+# bluetooth control
+bindsym $mod+b exec --no-startup-id rofi-bluetooth
+
 # Vim anywhere
 # bindsym $mod+Alt+v exec ~/.vim-anywhere/bin/run
 

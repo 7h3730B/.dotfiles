@@ -8,7 +8,7 @@ foreground-alt = #ffffff
 
 primary = ${xrdb:color7}
 ; #ffb52a
-secondary = ${xrdb:color2}
+secondary = ${xrdb:color4}
 ; #e60053
 
 alert = #bd2c40
@@ -123,7 +123,7 @@ padding-right = 3
 module-margin-left = 1
 module-margin-right = 2
 
-modules-left = i3 kernel xkeyboard
+modules-left = i3 kernel xkeyboard bluetooth
 modules-center = xwindow spotify
 modules-right = pulseaudio filesystem eth memory cpu date
 
@@ -131,10 +131,10 @@ modules-right = pulseaudio filesystem eth memory cpu date
 
 [module/eth]
 type = internal/network
-interface = enp2s0
+interface = enp34s0
 interval = 3.0
 
-format-connected-underline = #55aa55
+format-connected-underline = 
 format-connected-prefix = " "
 format-connected-prefix-foreground = ${colors.primary}
 label-connected = %local_ip%
@@ -363,6 +363,12 @@ menu-2-0 = power off
 menu-2-0-exec = poweroff
 menu-2-1 = cancel
 menu-2-1-exec = menu-open-0
+
+[module/bluetooth]
+type = custom/script
+exec = rofi-bluetooth --status
+interval = 100
+click-left = rofi-bluetooth &
 
 [settings]
 screenchange-reload = true
