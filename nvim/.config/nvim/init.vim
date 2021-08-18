@@ -51,8 +51,8 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 
 " Markdown preview
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 Plug 'iamcco/markdown-preview.nvim', { 'do': { -> mkdp#util#install() }, 'for': ['markdown', 'vim-plug']}
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && yarn install'  }
 
 Plug 'glts/vim-radical'
 Plug 'glts/vim-magnum'
@@ -475,7 +475,7 @@ let g:mkdp_page_title = '「${name}」'
 
 " recognizvd filetypes
 " these filetypes will have MarkdownPreview... commands
-let g:mkdp_filetypes = ['markdown']
+let g:mkdp_filetypes = ['markdown', 'vimwiki']
 
 " mappings
 
