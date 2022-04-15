@@ -132,15 +132,15 @@ alias cat="bat"
 # Fixes the utf-8 char issues
 alias tmux="tmux -u"
 # Import the colors.
-. "${HOME}/.cache/wal/colors.sh"
+# . "${HOME}/.cache/wal/colors.sh"
 
 # Create the alias.
 alias dmenu='dmenu_run -nb "$color0" -nf "$color15" -sb "$color1" -sf "$color15"'
 alias list_outputs='xrandr -q | grep " connected" | cut -d" " -f1'
-(cat ~/.cache/wal/sequences &) >> /dev/null
-alias msi-rgb='${HOME}/git-repos/msi-rgb/target/release/msi-rgb'
-alias disable-rgb='msi-rgb -x 0 0 0'
-alias brave='brave --use-gl=desktop --enable-features=VaapiVideoDecoder'
+# (cat ~/.cache/wal/sequences &) >> /dev/null
+# alias msi-rgb='${HOME}/git-repos/msi-rgb/target/release/msi-rgb'
+# alias disable-rgb='msi-rgb -x 0 0 0'
+# alias brave='brave --use-gl=desktop --enable-features=VaapiVideoDecoder'
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
