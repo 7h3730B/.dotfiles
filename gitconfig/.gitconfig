@@ -17,7 +17,7 @@
 	name = Teo 7h3730B
 
 [core]
-    editor = nvim
+    editor = vim
 
 [pager]
     diff = delta

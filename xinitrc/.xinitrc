@@ -33,13 +33,13 @@ if [ -d /etc/X11/xinit/xinitrc.d ] ; then
 fi
 
 # Setup displays
-xrandr --setprovideroutputsource modesetting NVIDIA-0 &
-xrandr --output HDMI-0 --mode 1920x1080 --rate 60 --output DP-0 --primary --mode 1920x1080 --rate 144 --right-of HDMI-0 &
+# xrandr --setprovideroutputsource modesetting NVIDIA-0 &
+# xrandr --output HDMI-0 --mode 1920x1080 --rate 60 --output DP-0 --primary --mode 1920x1080 --rate 144 --right-of HDMI-0 &
 xrandr --auto &
 
-numlockx &
+# numlockx &
 # nitrogen --restore &
-wal -i ~/wallpaper.jpg &
-# picom &
+# wal -i ~/wallpaper.jpg &
+picom &
 setxkbmap -layout euro2 &
 exec i3 
